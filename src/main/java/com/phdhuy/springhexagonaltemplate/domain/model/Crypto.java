@@ -3,7 +3,6 @@ package com.phdhuy.springhexagonaltemplate.domain.model;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,11 +32,7 @@ public class Crypto {
 
   private Double vwap24Hr;
 
+  private String explorer;
+
   private List<Double> pricesUsd;
-
-  private Timestamp createdAt;
-
-  private Timestamp updatedAt;
-
-  private Timestamp deletedAt;
 }
