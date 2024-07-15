@@ -1,1 +1,1 @@
-# spring-hexagonal-template
+# stock-alert
