@@ -36,5 +36,5 @@ public class CryptoEntity extends BaseEntity {
 
   @Column private Double vwap24Hr;
 
-  @Column private Double explorer;
+  @Column private String explorer;
 }

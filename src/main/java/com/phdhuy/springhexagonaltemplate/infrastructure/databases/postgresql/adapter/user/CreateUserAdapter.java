@@ -1,4 +1,4 @@
-package com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.adapter;
+package com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.adapter.user;
 
 import com.phdhuy.springhexagonaltemplate.domain.model.User;
 import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.user.CreateUserPort;

@@ -40,3 +40,13 @@ refresh_token_request:
     not_blank:
       code: VAL.SRR0101
       message: Refresh token must not be blank!
+
+create_portfolio_request:
+  name:
+    not_blank:
+      code: VAL.CPR0101
+      message: Name must not be blank!
+  avatar:
+    not_blank:
+      code: VAL.CPR0102
+      message: Avatar must not be blank!

@@ -35,4 +35,8 @@ public class TransactionEntity extends BaseEntity {
   @ManyToOne
   @JoinColumn(name = "portfolio_id")
   private PortfolioEntity portfolioEntity;
+
+  @ManyToOne
+  @JoinColumn(name = "crypto_id")
+  private CryptoEntity cryptoEntity;
 }
