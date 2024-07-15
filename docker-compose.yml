@@ -4,7 +4,7 @@ services:
   postgres:
     image: postgres:latest
     hostname: postgres
-    container_name: postgres-container
+    container_name: postgres-stock-alert
     ports:
       - "5433:5432"
     environment:
@@ -16,7 +16,7 @@ services:
 
   rabbitmq:
     image: "rabbitmq:latest"
-    container_name: rabbitmq-container
+    container_name: rabbitmq-stock-alert
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -25,7 +25,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: spring-app-container
+    container_name: spring-app-stock-alert
     links:
       - postgres
       - rabbitmq

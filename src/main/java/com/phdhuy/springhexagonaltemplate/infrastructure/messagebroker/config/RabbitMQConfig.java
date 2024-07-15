@@ -1,5 +1,9 @@
 package com.phdhuy.springhexagonaltemplate.infrastructure.messagebroker.config;
 
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
@@ -20,5 +24,30 @@ public class RabbitMQConfig implements WebSocketMessageBrokerConfigurer {
     RabbitTemplate template = new RabbitTemplate(connectionFactory);
     template.setMessageConverter(jsonMessageConverter());
     return template;
+  }
+
+  @Bean
+  public FanoutExchange fanoutExchange() {
+    return new FanoutExchange("websocket.fanout.exchange");
+  }
+
+  @Bean
+  public Queue queue1() {
+    return new Queue("price.database");
+  }
+
+  @Bean
+  public Queue queue2() {
+    return new Queue("price.client");
+  }
+
+  @Bean
+  public Binding binding1(Queue queue1, FanoutExchange fanoutExchange) {
+    return BindingBuilder.bind(queue1).to(fanoutExchange);
+  }
+
+  @Bean
+  public Binding binding2(Queue queue2, FanoutExchange fanoutExchange) {
+    return BindingBuilder.bind(queue2).to(fanoutExchange);
   }
 }
