@@ -8,9 +8,9 @@ services:
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_DB: dockerdb
-      POSTGRES_USER: dockeruser
-      POSTGRES_PASSWORD: dockerpassword
+      POSTGRES_DB: stock-alert
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: duchuy
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
@@ -30,9 +30,9 @@ services:
       - postgres
       - rabbitmq
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/dockerdb
-      SPRING_DATASOURCE_USERNAME: dockeruser
-      SPRING_DATASOURCE_PASSWORD: dockerpassword
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/stock-alert
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: duchuy
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest

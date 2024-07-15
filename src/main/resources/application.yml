@@ -4,7 +4,7 @@ server:
   port: 8080
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/spring-hexagonal
+    url: jdbc:postgresql://localhost:5432/stock-alert
     username: postgres
     password: duchuy
     hikari:
