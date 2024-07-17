@@ -5,15 +5,15 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.messagebroker.RabbitMQPort;
 import com.phdhuy.springhexagonaltemplate.infrastructure.external_api.constant.ExternalAPIConstant;
-import com.phdhuy.springhexagonaltemplate.shared.annotation.UseCase;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Service;
 import org.springframework.web.socket.TextMessage;
 
-@UseCase
+@Service
 @RequiredArgsConstructor
 @Slf4j
 public class GetPriceByExternalService extends WebSocketListener {
