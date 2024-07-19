@@ -1,6 +1,6 @@
 package com.phdhuy.springhexagonaltemplate.domain.model;
 
-import com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.entity.enums.TransactionType;
+import com.phdhuy.springhexagonaltemplate.domain.model.enums.TransactionType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,10 +14,6 @@ public class Transaction {
   private UUID id;
 
   private Timestamp createdAt;
-
-  private Timestamp updatedAt;
-
-  private Timestamp deletedAt;
 
   private TransactionType transactionType;
 

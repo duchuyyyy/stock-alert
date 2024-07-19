@@ -3,7 +3,7 @@ package com.phdhuy.springhexagonaltemplate.infrastructure.external_api.adapter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.phdhuy.springhexagonaltemplate.domain.model.Crypto;
-import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.crypto.GetDataCryptoPort;
+import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.crypto.CrawlDataCryptoPort;
 import com.phdhuy.springhexagonaltemplate.infrastructure.external_api.constant.ExternalAPIConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +19,14 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class GetDataCryptoAdapter implements GetDataCryptoPort {
+public class CrawlDataCryptoAdapter implements CrawlDataCryptoPort {
 
   private final OkHttpClient httpClient;
 
   private final ObjectMapper objectMapper;
 
   @Override
-  public List<Crypto> getDataCrypto() {
+  public List<Crypto> crawlDataCrypto() {
     List<Crypto> cryptoList = new ArrayList<>();
 
     Request request = new Request.Builder().url(ExternalAPIConstant.GET_ALL_INFO_CRYPTO).build();
@@ -52,20 +52,18 @@ public class GetDataCryptoAdapter implements GetDataCryptoPort {
   }
 
   private Crypto convertToCrypto(JsonNode cryptoNode) {
-    Crypto crypto = new Crypto();
-
-    crypto.setIdentity(cryptoNode.get("id").asText());
-    crypto.setRank(cryptoNode.get("rank").asLong());
-    crypto.setSymbol(cryptoNode.get("symbol").asText());
-    crypto.setName(cryptoNode.get("name").asText());
-    crypto.setSupply(cryptoNode.get("supply").asDouble());
-    crypto.setMaxSupply(cryptoNode.get("maxSupply").asDouble());
-    crypto.setMarketCapUsd(cryptoNode.get("marketCapUsd").asDouble());
-    crypto.setVolumeUsd24Hr(cryptoNode.get("volumeUsd24Hr").asDouble());
-    crypto.setChangePercent24Hr(cryptoNode.get("changePercent24Hr").asDouble());
-    crypto.setVwap24Hr(cryptoNode.get("vwap24Hr").asDouble());
-    crypto.setExplorer(cryptoNode.get("explorer").asText());
-
-    return crypto;
+    return Crypto.builder()
+        .identity(cryptoNode.get("id").asText())
+        .rank(cryptoNode.get("rank").asLong())
+        .symbol(cryptoNode.get("symbol").asText())
+        .name(cryptoNode.get("name").asText())
+        .supply(cryptoNode.get("supply").asDouble())
+        .maxSupply(cryptoNode.get("maxSupply").asDouble())
+        .marketCapUsd(cryptoNode.get("marketCapUsd").asDouble())
+        .volumeUsd24Hr(cryptoNode.get("volumeUsd24Hr").asDouble())
+        .changePercent24Hr(cryptoNode.get("changePercent24Hr").asDouble())
+        .vwap24Hr(cryptoNode.get("vwap24Hr").asDouble())
+        .explorer(cryptoNode.get("explorer").asText())
+        .build();
   }
 }

@@ -45,7 +45,6 @@ public class GetPriceByExternalService extends WebSocketListener {
   public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
     try {
       JsonNode node = new ObjectMapper().readTree(text);
-      log.info("Received message: {}", node.toString());
       rabbitMQPort.sendMessage(node.toString());
     } catch (JsonProcessingException e) {
       log.error("Error parsing JSON message:", e);

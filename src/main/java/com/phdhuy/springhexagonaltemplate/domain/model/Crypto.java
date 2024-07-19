@@ -1,13 +1,12 @@
 package com.phdhuy.springhexagonaltemplate.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Data;
 
-import java.util.List;
 import java.util.UUID;
 
-@Getter
-@Setter
+@Data
+@Builder
 public class Crypto {
 
   private UUID id;
@@ -34,5 +33,5 @@ public class Crypto {
 
   private String explorer;
 
-  private List<Double> pricesUsd;
+  private Double currentPriceUsd;
 }

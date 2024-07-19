@@ -1,6 +1,5 @@
 package com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.entity;
 
-import com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.entity.enums.TransactionType;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,9 +17,8 @@ public class TransactionEntity extends BaseEntity {
 
   @Id @GeneratedValue private UUID id;
 
-  @Enumerated(EnumType.STRING)
   @Column
-  private TransactionType type;
+  private String type;
 
   @Column private int quantity;
 

@@ -39,4 +39,6 @@ public class CryptoInfoResponse {
   private Double vwap24Hr;
 
   private String explorer;
+
+  private Double currentPriceUsd;
 }

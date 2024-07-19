@@ -4,7 +4,7 @@ import com.phdhuy.springhexagonaltemplate.domain.model.Crypto;
 
 import java.util.List;
 
-public interface GetDataCryptoPort {
+public interface CrawlDataCryptoPort {
 
-  List<Crypto> getDataCrypto();
+  List<Crypto> crawlDataCrypto();
 }
