@@ -1,4 +1,4 @@
-package com.phdhuy.springhexagonaltemplate.infrastructure.security.utils;
+package com.phdhuy.springhexagonaltemplate.infrastructure.security.adapters;
 
 import com.phdhuy.springhexagonaltemplate.application.rest.response.auth.TokenResponse;
 import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.auth.TokenUtilsPort;
@@ -24,7 +24,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class TokenUtils implements TokenUtilsPort {
+public class TokenUtilsAdapter implements TokenUtilsPort {
 
   private final TokenProperties tokenProperties;
 

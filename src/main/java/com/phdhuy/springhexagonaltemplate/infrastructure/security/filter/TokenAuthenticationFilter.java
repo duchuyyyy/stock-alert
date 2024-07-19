@@ -3,7 +3,7 @@ package com.phdhuy.springhexagonaltemplate.infrastructure.security.filter;
 import com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.entity.UserEntity;
 import com.phdhuy.springhexagonaltemplate.infrastructure.security.domain.UserPrincipal;
 import com.phdhuy.springhexagonaltemplate.infrastructure.security.utils.LogUtils;
-import com.phdhuy.springhexagonaltemplate.infrastructure.security.utils.TokenUtils;
+import com.phdhuy.springhexagonaltemplate.infrastructure.security.adapters.TokenUtilsAdapter;
 import com.phdhuy.springhexagonaltemplate.shared.common.CommonFunction;
 import com.phdhuy.springhexagonaltemplate.shared.constant.CommonConstant;
 import com.phdhuy.springhexagonaltemplate.shared.constant.MessageConstant;
@@ -31,7 +31,7 @@ import java.util.Objects;
 @Slf4j
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
-  private final TokenUtils tokenUtils;
+  private final TokenUtilsAdapter tokenUtilsAdapter;
 
   @Override
   protected void doFilterInternal(
@@ -40,7 +40,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     try {
       String jwt = getJwtFromRequest(request);
       if (StringUtils.hasText(jwt)) {
-        UserEntity user = tokenUtils.getUserFromToken(jwt);
+        UserEntity user = tokenUtilsAdapter.getUserFromToken(jwt);
         UserDetails userDetails = UserPrincipal.create(user);
         UsernamePasswordAuthenticationToken authentication =
             new UsernamePasswordAuthenticationToken(
