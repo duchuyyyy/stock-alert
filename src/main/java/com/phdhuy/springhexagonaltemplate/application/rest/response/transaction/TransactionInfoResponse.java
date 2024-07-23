@@ -3,7 +3,7 @@ package com.phdhuy.springhexagonaltemplate.application.rest.response.transaction
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.phdhuy.springhexagonaltemplate.application.rest.response.crypto.CryptoInfoResponse;
+import com.phdhuy.springhexagonaltemplate.application.rest.response.asset.AssetInfoResponse;
 import com.phdhuy.springhexagonaltemplate.domain.model.enums.TransactionType;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -36,5 +36,5 @@ public class TransactionInfoResponse {
 
   private Double total;
 
-  private CryptoInfoResponse crypto;
+  private AssetInfoResponse asset;
 }

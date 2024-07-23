@@ -1,7 +1,7 @@
-package com.phdhuy.springhexagonaltemplate.application.rest.controller.crypto;
+package com.phdhuy.springhexagonaltemplate.application.rest.controller.asset;
 
-import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.crypto.GetAllCryptoUseCase;
-import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.crypto.StreamCryptoPriceUseCase;
+import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.GetAllAssetUseCase;
+import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.StreamCryptoPriceUseCase;
 import com.phdhuy.springhexagonaltemplate.shared.payload.general.ResponseDataAPI;
 import com.phdhuy.springhexagonaltemplate.shared.utils.PagingUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,27 +16,27 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 
 @RestController
-@RequestMapping("/v1/cryptos")
+@RequestMapping("/v1/assets")
 @RequiredArgsConstructor
-@Tag(name = "Cryptos APIs")
-public class CryptoController {
+@Tag(name = "Asset APIs")
+public class AssetController {
 
   private final StreamCryptoPriceUseCase streamCryptoPriceUseCase;
 
-  private final GetAllCryptoUseCase getAllCryptoUseCase;
+  private final GetAllAssetUseCase getAllAssetUseCase;
 
   @GetMapping
-  public ResponseEntity<ResponseDataAPI> getAllCryptos(
+  public ResponseEntity<ResponseDataAPI> getAllAsset(
       @RequestParam(name = "sort", defaultValue = "rank") String sortBy,
       @RequestParam(name = "order", defaultValue = "desc") String order,
       @RequestParam(name = "page", defaultValue = "1") int page,
       @RequestParam(name = "paging", defaultValue = "50") int paging) {
     Pageable pageable = PagingUtils.makePageRequestWithSnakeCase(sortBy, order, page, paging);
-    return ResponseEntity.ok(getAllCryptoUseCase.getAllCrypto(pageable));
+    return ResponseEntity.ok(getAllAssetUseCase.getAllAsset(pageable));
   }
 
   @GetMapping("/prices")
-  public Flux<ServerSentEvent<Object>> streamCryptosPrices() {
+  public Flux<ServerSentEvent<Object>> streamAssetsPrices() {
     return streamCryptoPriceUseCase.streamCryptosPrices();
   }
 }

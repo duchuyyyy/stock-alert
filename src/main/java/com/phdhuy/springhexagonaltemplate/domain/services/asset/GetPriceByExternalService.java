@@ -1,4 +1,4 @@
-package com.phdhuy.springhexagonaltemplate.domain.services.crypto;
+package com.phdhuy.springhexagonaltemplate.domain.services.asset;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;

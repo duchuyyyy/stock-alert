@@ -1,4 +1,4 @@
-package com.phdhuy.springhexagonaltemplate.domain.ports.inbound.crypto;
+package com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset;
 
 import org.springframework.http.codec.ServerSentEvent;
 import reactor.core.publisher.Flux;

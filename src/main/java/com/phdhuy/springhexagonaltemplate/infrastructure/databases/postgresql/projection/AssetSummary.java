@@ -1,6 +1,6 @@
 package com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.projection;
 
-public interface CryptoSummary {
+public interface AssetSummary {
 
   String getId();
 

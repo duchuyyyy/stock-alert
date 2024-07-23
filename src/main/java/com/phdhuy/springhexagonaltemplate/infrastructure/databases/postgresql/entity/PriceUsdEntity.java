@@ -14,14 +14,11 @@ import java.util.UUID;
 @Table(name = "price_usd")
 public class PriceUsdEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
+  @Id @GeneratedValue private UUID id;
 
-    @Column
-    private Double priceUsd;
+  @Column private Double priceUsd;
 
-    @ManyToOne
-    @JoinColumn(name = "crypto_id")
-    private CryptoEntity cryptoEntity;
+  @ManyToOne
+  @JoinColumn(name = "asset_id")
+  private AssetEntity assetEntity;
 }

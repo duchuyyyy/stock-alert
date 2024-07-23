@@ -7,7 +7,7 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class Crypto {
+public class Asset {
 
   private UUID id;
 
