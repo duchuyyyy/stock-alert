@@ -11,8 +11,8 @@ import java.util.UUID;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "crypto")
-public class CryptoEntity extends BaseEntity {
+@Table(name = "asset")
+public class AssetEntity extends BaseEntity {
 
   @Id @GeneratedValue private UUID id;
 

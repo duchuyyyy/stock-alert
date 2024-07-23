@@ -1,4 +1,4 @@
-package com.phdhuy.springhexagonaltemplate.application.rest.response.crypto;
+package com.phdhuy.springhexagonaltemplate.application.rest.response.asset;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CryptoInfoResponse {
+public class AssetInfoResponse {
 
   private UUID id;
 

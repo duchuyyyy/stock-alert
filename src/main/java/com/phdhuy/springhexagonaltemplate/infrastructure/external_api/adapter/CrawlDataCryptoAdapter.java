@@ -2,8 +2,8 @@ package com.phdhuy.springhexagonaltemplate.infrastructure.external_api.adapter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.phdhuy.springhexagonaltemplate.domain.model.Crypto;
-import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.crypto.CrawlDataCryptoPort;
+import com.phdhuy.springhexagonaltemplate.domain.model.Asset;
+import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.asset.CrawlDataCryptoPort;
 import com.phdhuy.springhexagonaltemplate.infrastructure.external_api.constant.ExternalAPIConstant;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +26,8 @@ public class CrawlDataCryptoAdapter implements CrawlDataCryptoPort {
   private final ObjectMapper objectMapper;
 
   @Override
-  public List<Crypto> crawlDataCrypto() {
-    List<Crypto> cryptoList = new ArrayList<>();
+  public List<Asset> crawlDataCrypto() {
+    List<Asset> assetList = new ArrayList<>();
 
     Request request = new Request.Builder().url(ExternalAPIConstant.GET_ALL_INFO_CRYPTO).build();
 
@@ -42,17 +42,17 @@ public class CrawlDataCryptoAdapter implements CrawlDataCryptoPort {
       JsonNode dataNode = root.path("data");
 
       for (JsonNode cryptoNode : dataNode) {
-        cryptoList.add(this.convertToCrypto(cryptoNode));
+        assetList.add(this.convertToCrypto(cryptoNode));
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
 
-    return cryptoList;
+    return assetList;
   }
 
-  private Crypto convertToCrypto(JsonNode cryptoNode) {
-    return Crypto.builder()
+  private Asset convertToCrypto(JsonNode cryptoNode) {
+    return Asset.builder()
         .identity(cryptoNode.get("id").asText())
         .rank(cryptoNode.get("rank").asLong())
         .symbol(cryptoNode.get("symbol").asText())

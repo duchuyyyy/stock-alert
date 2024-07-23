@@ -36,6 +36,6 @@ public class MessageConstant {
 
   public static final String EMAIL_IS_NOT_VERIFIED = "email_is_not_verified";
 
-  //Crypto
-  public static final String CRYPTO_NOT_FOUND = "crypto_not_found";
+  //Asset
+  public static final String ASSET_NOT_FOUND = "asset_not_found";
 }

@@ -27,5 +27,5 @@ public class Transaction {
 
   private Double total;
 
-  private Crypto crypto;
+  private Asset asset;
 }

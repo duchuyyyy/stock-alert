@@ -14,15 +14,13 @@ import java.util.UUID;
 @Table(name = "watch_list")
 public class WatchListEntity extends BaseEntity {
 
-    @Id
-    @GeneratedValue
-    private UUID id;
+  @Id @GeneratedValue private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private UserEntity userEntity;
+  @ManyToOne
+  @JoinColumn(name = "user_id")
+  private UserEntity userEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "crypto_id")
-    private CryptoEntity cryptoEntity;
+  @ManyToOne
+  @JoinColumn(name = "asset_id")
+  private AssetEntity assetEntity;
 }
