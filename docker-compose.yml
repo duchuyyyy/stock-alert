@@ -21,6 +21,18 @@ services:
       - "5672:5672"
       - "15672:15672"
 
+  influxdb:
+    image: influxdb:latest
+    container_name: influxdb-stock-alert
+    ports:
+      - "8086:8086"
+    environment:
+      INFLUXDB_DB: stock-alert
+      INFLUXDB_ADMIN_USER: influx
+      INFLUXDB_ADMIN_PASSWORD: duchuy1311
+    volumes:
+      - influxdb-data:/var/lib/influxdb2
+
   backend:
     build:
       context: .
@@ -29,6 +41,7 @@ services:
     links:
       - postgres
       - rabbitmq
+      - influxdb
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/stock-alert
       SPRING_DATASOURCE_USERNAME: postgres
@@ -37,11 +50,17 @@ services:
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
       SPRING_RABBITMQ_PASSWORD: guest
+      INFLUXDB_URL: http://influxdb:8086
+      INFLUXDB_TOKEN: bW6eoLcswptcDR1Y8n_-7vyccwdeutBgU7grHtU9Mct8cKCVdv7wqLVLXTdAWQ2iHiW7YNXPp3cl2aheLqf5cw==
+      INFLUXDB_ORG: stock-alert
+      INFLUXDB_BUCKET: stock-alert
     ports:
       - "8080:8080"
     depends_on:
       - postgres
       - rabbitmq
+      - influxdb
 
 volumes:
   postgres-data:
+  influxdb-data:
