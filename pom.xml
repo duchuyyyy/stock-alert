@@ -38,6 +38,7 @@
         <jjwt.version>0.9.1</jjwt.version>
         <jsonwebtoken.version>0.11.5</jsonwebtoken.version>
         <influx.version>6.6.0</influx.version>
+        <websocket.version>1.5.7</websocket.version>
     </properties>
     <dependencies>
         <dependency>
@@ -173,6 +174,11 @@
             <groupId>com.influxdb</groupId>
             <artifactId>influxdb-client-java</artifactId>
             <version>${influx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>${websocket.version}</version>
         </dependency>
     </dependencies>
 

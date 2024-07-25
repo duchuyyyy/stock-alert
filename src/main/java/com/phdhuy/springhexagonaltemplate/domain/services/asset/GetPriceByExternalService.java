@@ -8,51 +8,99 @@ import com.phdhuy.springhexagonaltemplate.infrastructure.external_api.constant.E
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
-import org.jetbrains.annotations.NotNull;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.handshake.ServerHandshake;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.TextMessage;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class GetPriceByExternalService extends WebSocketListener {
-
-  private final OkHttpClient okHttpClient;
+public class GetPriceByExternalService {
 
   private final RabbitMQPort rabbitMQPort;
+  private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+  private static final int RECONNECT_DELAY = 3;
+  private volatile boolean isConnected = false;
+  private WebSocketClient webSocketClient;
 
   @PostConstruct
   public void connect() {
-    Request request = new Request.Builder().url(ExternalAPIConstant.GET_PRICE_CRYPTO).build();
-    okHttpClient.newWebSocket(request, this);
-  }
-
-  @Override
-  public void onOpen(WebSocket webSocket, @NotNull Response response) {
-
-    String subscribeMessage =
-        "{\"method\": \"SUBSCRIBE\", \"params\": [\"btcusdt@ticker\"], \"id\": 1}";
-    webSocket.send(String.valueOf(new TextMessage(subscribeMessage)));
-  }
-
-  @Override
-  public void onClosed(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-    log.info("WebSocket connection closed: {}", reason);
-  }
-
-  @Override
-  public void onMessage(@NotNull WebSocket webSocket, @NotNull String text) {
     try {
-      JsonNode node = new ObjectMapper().readTree(text);
-      rabbitMQPort.sendMessage(node.toString());
-    } catch (JsonProcessingException e) {
-      log.error("Error parsing JSON message:", e);
+      connectWebSocket();
+    } catch (URISyntaxException e) {
+      log.error("Invalid WebSocket URL", e);
     }
   }
 
-  @Override
-  public void onClosing(@NotNull WebSocket webSocket, int code, @NotNull String reason) {
-    log.info("WebSocket connection closing: {}", reason);
+  private void connectWebSocket() throws URISyntaxException {
+    if (isConnected) {
+      return;
+    }
+
+    URI uri = new URI(ExternalAPIConstant.GET_PRICE_CRYPTO);
+    webSocketClient =
+        new WebSocketClient(uri) {
+          @Override
+          public void onOpen(ServerHandshake handshakedata) {
+            log.info("WebSocket connection opened");
+            isConnected = true;
+            String subscribeMessage =
+                "{\"method\": \"SUBSCRIBE\", \"params\": [\"btcusdt@ticker\"], \"id\": 1}";
+            send(subscribeMessage);
+          }
+
+          @Override
+          public void onMessage(String message) {
+            try {
+              JsonNode node = new ObjectMapper().readTree(message);
+              rabbitMQPort.sendMessage(node.toString());
+            } catch (JsonProcessingException e) {
+              log.error("Error parsing JSON message:", e);
+            }
+          }
+
+          @Override
+          public void onClose(int code, String reason, boolean remote) {
+            log.info("WebSocket connection closed: {}", reason);
+            isConnected = false;
+            scheduleReconnect();
+          }
+
+          @Override
+          public void onError(Exception ex) {
+            log.error("WebSocket connection error", ex);
+            isConnected = false;
+            scheduleReconnect();
+          }
+        };
+
+    webSocketClient.connect();
+  }
+
+  private void scheduleReconnect() {
+    scheduler.schedule(
+        () -> {
+          log.info("### Reconnecting...");
+          try {
+            connectWebSocket();
+          } catch (URISyntaxException e) {
+            log.error("Invalid WebSocket URL", e);
+          }
+        },
+        RECONNECT_DELAY,
+        TimeUnit.SECONDS);
+  }
+
+  public void closeWebSocket() {
+    if (webSocketClient != null) {
+      webSocketClient.close();
+    }
   }
 }
