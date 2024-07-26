@@ -25,6 +25,4 @@ public interface AssetSummary {
   Double getVwap24Hr();
 
   String getExplorer();
-
-  Double getCurrentPriceUsd();
 }
