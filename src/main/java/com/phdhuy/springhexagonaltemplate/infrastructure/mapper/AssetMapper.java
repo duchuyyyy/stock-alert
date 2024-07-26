@@ -10,6 +10,6 @@ import org.mapstruct.Mapping;
 public interface AssetMapper {
 
   @Mapping(source = "assetSummary.rank", target = "rank")
-  @Mapping(source = "assetSummary.currentPriceUsd", target = "currentPriceUsd")
-  Asset toAssetFromProjection(AssetSummary assetSummary);
+  @Mapping(source = "latestPrice", target = "currentPriceUsd")
+  Asset toAssetFromProjection(AssetSummary assetSummary, Double latestPrice);
 }

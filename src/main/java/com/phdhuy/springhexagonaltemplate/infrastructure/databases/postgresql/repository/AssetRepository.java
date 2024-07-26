@@ -24,19 +24,8 @@ public interface AssetRepository extends JpaRepository<AssetEntity, UUID> {
               + "a.name as name, a.supply as supply, a.max_supply as maxSupply, a.rank as rank, "
               + "a.market_cap_usd as marketCapUsd, a.volume_usd24hr as volumeUsd24Hr, "
               + "a.change_percent24hr as changePercent24Hr, a.vwap24hr as vwap24Hr, "
-              + "a.explorer as explorer, pu.price_usd as currentPriceUsd "
-              + "FROM asset a "
-              + "INNER JOIN ( "
-              + "    SELECT p.asset_id, p.price_usd "
-              + "    FROM price_usd p "
-              + "    JOIN ( "
-              + "        SELECT asset_id, MAX(created_at) AS max_created_at "
-              + "        FROM price_usd "
-              + "        GROUP BY asset_id "
-              + "    ) AS latest_price "
-              + "    ON p.asset_id = latest_price.asset_id "
-              + "    AND p.created_at = latest_price.max_created_at "
-              + ") AS pu ON pu.asset_id = a.id",
+              + "a.explorer as explorer "
+              + "FROM asset a ",
       nativeQuery = true)
   Page<AssetSummary> getAllAssetSummary(Pageable pageable);
 }

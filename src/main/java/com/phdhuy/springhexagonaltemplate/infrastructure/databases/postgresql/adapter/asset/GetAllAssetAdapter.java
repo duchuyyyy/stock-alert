@@ -2,14 +2,17 @@ package com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.a
 
 import com.phdhuy.springhexagonaltemplate.domain.model.Asset;
 import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.asset.GetAllAssetPort;
+import com.phdhuy.springhexagonaltemplate.domain.ports.outbound.asset.GetLatestPriceAssetPort;
 import com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.projection.AssetSummary;
 import com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.repository.AssetRepository;
 import com.phdhuy.springhexagonaltemplate.infrastructure.mapper.AssetMapper;
 import com.phdhuy.springhexagonaltemplate.shared.annotation.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
@@ -17,12 +20,22 @@ public class GetAllAssetAdapter implements GetAllAssetPort {
 
   private final AssetRepository assetRepository;
 
+  private final GetLatestPriceAssetPort getLatestPriceAssetPort;
+
   private final AssetMapper assetMapper;
 
   @Override
   public Page<Asset> getAllAsset(Pageable pageable) {
     Page<AssetSummary> assetSummaries = assetRepository.getAllAssetSummary(pageable);
 
-    return assetSummaries.map(assetMapper::toAssetFromProjection);
+    List<Asset> assets =
+        assetSummaries.getContent().stream().map(this::mapToAsset).toList();
+
+    return new PageImpl<>(assets, pageable, assetSummaries.getTotalElements());
+  }
+
+  private Asset mapToAsset(AssetSummary assetSummary) {
+    double latestPrice = getLatestPriceAssetPort.getLatestPriceAsset(assetSummary.getIdentity());
+    return assetMapper.toAssetFromProjection(assetSummary, latestPrice);
   }
 }
