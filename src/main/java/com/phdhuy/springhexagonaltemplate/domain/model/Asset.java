@@ -1,12 +1,15 @@
 package com.phdhuy.springhexagonaltemplate.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Asset {
 
   private UUID id;
@@ -34,4 +37,6 @@ public class Asset {
   private String explorer;
 
   private Double currentPriceUsd;
+
+  private List<PriceAsset> priceAssets;
 }

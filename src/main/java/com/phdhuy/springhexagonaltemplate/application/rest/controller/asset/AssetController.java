@@ -2,6 +2,7 @@ package com.phdhuy.springhexagonaltemplate.application.rest.controller.asset;
 
 import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.GetAllAssetUseCase;
 import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.GetDetailAssetUseCase;
+import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.GetPriceHistoryAssetUseCase;
 import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.StreamCryptoPriceUseCase;
 import com.phdhuy.springhexagonaltemplate.shared.payload.general.ResponseDataAPI;
 import com.phdhuy.springhexagonaltemplate.shared.utils.PagingUtils;
@@ -27,6 +28,8 @@ public class AssetController {
 
   private final GetDetailAssetUseCase getDetailAssetUseCase;
 
+  private final GetPriceHistoryAssetUseCase getPriceHistoryAssetUseCase;
+
   @GetMapping
   public ResponseEntity<ResponseDataAPI> getAllAsset(
       @RequestParam(name = "sort", defaultValue = "rank") String sortBy,
@@ -41,6 +44,14 @@ public class AssetController {
   public ResponseEntity<ResponseDataAPI> getDetailAsset(@PathVariable UUID assetId) {
     return ResponseEntity.ok(
         ResponseDataAPI.successWithoutMeta(getDetailAssetUseCase.getDetailAsset(assetId)));
+  }
+
+  @GetMapping("/{assetId}/history")
+  public ResponseEntity<ResponseDataAPI> getPriceHistoryAsset(
+      @PathVariable UUID assetId, @RequestParam String interval) {
+    return ResponseEntity.ok(
+        ResponseDataAPI.successWithoutMeta(
+            getPriceHistoryAssetUseCase.getPriceHistoryAsset(assetId, interval)));
   }
 
   @GetMapping("/prices")
