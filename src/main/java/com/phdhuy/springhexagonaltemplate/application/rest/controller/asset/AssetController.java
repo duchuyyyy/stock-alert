@@ -1,6 +1,7 @@
 package com.phdhuy.springhexagonaltemplate.application.rest.controller.asset;
 
 import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.GetAllAssetUseCase;
+import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.GetDetailAssetUseCase;
 import com.phdhuy.springhexagonaltemplate.domain.ports.inbound.asset.StreamCryptoPriceUseCase;
 import com.phdhuy.springhexagonaltemplate.shared.payload.general.ResponseDataAPI;
 import com.phdhuy.springhexagonaltemplate.shared.utils.PagingUtils;
@@ -9,11 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.ServerSentEvent;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/assets")
@@ -25,6 +25,8 @@ public class AssetController {
 
   private final GetAllAssetUseCase getAllAssetUseCase;
 
+  private final GetDetailAssetUseCase getDetailAssetUseCase;
+
   @GetMapping
   public ResponseEntity<ResponseDataAPI> getAllAsset(
       @RequestParam(name = "sort", defaultValue = "rank") String sortBy,
@@ -33,6 +35,12 @@ public class AssetController {
       @RequestParam(name = "paging", defaultValue = "50") int paging) {
     Pageable pageable = PagingUtils.makePageRequestWithSnakeCase(sortBy, order, page, paging);
     return ResponseEntity.ok(getAllAssetUseCase.getAllAsset(pageable));
+  }
+
+  @GetMapping("/{assetId}")
+  public ResponseEntity<ResponseDataAPI> getDetailAsset(@PathVariable UUID assetId) {
+    return ResponseEntity.ok(
+        ResponseDataAPI.successWithoutMeta(getDetailAssetUseCase.getDetailAsset(assetId)));
   }
 
   @GetMapping("/prices")
