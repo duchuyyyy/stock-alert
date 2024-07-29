@@ -9,8 +9,10 @@ import com.phdhuy.springhexagonaltemplate.shared.annotation.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
@@ -41,6 +43,26 @@ public class GetLatestPriceAssetAdapter implements GetLatestPriceAssetPort {
         : 0.0;
   }
 
+  @Override
+  public HashMap<String, Double> getLatestPriceAssets(List<String> symbols) {
+    HashMap<String, Double> latestPrices = new HashMap<>();
+
+    String query = buildFluxQuery(symbols);
+
+    QueryApi queryApi = influxDBClient.getQueryApi();
+    List<FluxTable> tables = queryApi.query(query);
+
+    for (FluxTable table : tables) {
+      for (FluxRecord fluxRecord : table.getRecords()) {
+        String symbol = (String) fluxRecord.getValueByKey("symbol");
+        Double price = ((Double) Objects.requireNonNull(fluxRecord.getValueByKey("_value")));
+        latestPrices.put(symbol, price);
+      }
+    }
+
+    return latestPrices;
+  }
+
   private String buildFluxQuery(String symbol) {
     return String.format(
         "from(bucket: \"stock-alert\") "
@@ -49,5 +71,21 @@ public class GetLatestPriceAssetAdapter implements GetLatestPriceAssetPort {
             + "|> sort(columns: [\"_time\"], desc: true) "
             + "|> limit(n:1)",
         symbol);
+  }
+
+  private String buildFluxQuery(List<String> symbols) {
+    String filterCondition =
+        symbols.stream()
+            .map(symbol -> String.format("r.symbol == \"%s\"", symbol))
+            .collect(Collectors.joining(" or "));
+
+    return String.format(
+        "from(bucket: \"stock-alert\") "
+            + "|> range(start: -1y) "
+            + "|> filter(fn: (r) => r._measurement == \"price_asset\" and (%s)) "
+            + "|> group(columns: [\"symbol\"]) "
+            + "|> sort(columns: [\"_time\"], desc: true) "
+            + "|> limit(n:1)",
+        filterCondition);
   }
 }

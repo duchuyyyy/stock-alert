@@ -33,7 +33,7 @@ public class AssetController {
   @GetMapping
   public ResponseEntity<ResponseDataAPI> getAllAsset(
       @RequestParam(name = "sort", defaultValue = "rank") String sortBy,
-      @RequestParam(name = "order", defaultValue = "desc") String order,
+      @RequestParam(name = "order", defaultValue = "asc") String order,
       @RequestParam(name = "page", defaultValue = "1") int page,
       @RequestParam(name = "paging", defaultValue = "50") int paging) {
     Pageable pageable = PagingUtils.makePageRequestWithSnakeCase(sortBy, order, page, paging);

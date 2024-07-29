@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
+import java.util.HashMap;
 import java.util.List;
 
 @PersistenceAdapter
@@ -28,14 +29,21 @@ public class GetAllAssetAdapter implements GetAllAssetPort {
   public Page<Asset> getAllAsset(Pageable pageable) {
     Page<AssetSummary> assetSummaries = assetRepository.getAllAssetSummary(pageable);
 
+    List<String> symbols =
+        assetSummaries.getContent().stream().map(AssetSummary::getIdentity).toList();
+
+    HashMap<String, Double> latestPrices = getLatestPriceAssetPort.getLatestPriceAssets(symbols);
+
     List<Asset> assets =
-        assetSummaries.getContent().stream().map(this::mapToAsset).toList();
+        assetSummaries.getContent().stream()
+            .map(summary -> mapToAsset(summary, latestPrices))
+            .toList();
 
     return new PageImpl<>(assets, pageable, assetSummaries.getTotalElements());
   }
 
-  private Asset mapToAsset(AssetSummary assetSummary) {
-    double latestPrice = getLatestPriceAssetPort.getLatestPriceAsset(assetSummary.getIdentity());
-    return assetMapper.toAssetFromProjection(assetSummary, latestPrice);
+  private Asset mapToAsset(AssetSummary assetSummary, HashMap<String, Double> latestPrices) {
+    Double latestPrice = latestPrices.get(assetSummary.getIdentity());
+    return assetMapper.toAssetFromProjection(assetSummary, latestPrice != null ? latestPrice : 0.0);
   }
 }
