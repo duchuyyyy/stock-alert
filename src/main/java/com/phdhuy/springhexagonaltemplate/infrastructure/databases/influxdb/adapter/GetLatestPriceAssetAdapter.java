@@ -48,10 +48,12 @@ public class GetLatestPriceAssetAdapter implements GetLatestPriceAssetPort {
     HashMap<String, Double> latestPrices = new HashMap<>();
 
     String query = buildFluxQuery(symbols);
-
+    log.warn("Start query");
     QueryApi queryApi = influxDBClient.getQueryApi();
     List<FluxTable> tables = queryApi.query(query);
+    log.warn("End query");
 
+    log.warn("Start convert data");
     for (FluxTable table : tables) {
       for (FluxRecord fluxRecord : table.getRecords()) {
         String symbol = (String) fluxRecord.getValueByKey("symbol");
@@ -59,6 +61,7 @@ public class GetLatestPriceAssetAdapter implements GetLatestPriceAssetPort {
         latestPrices.put(symbol, price);
       }
     }
+    log.warn("End convert data");
 
     return latestPrices;
   }
