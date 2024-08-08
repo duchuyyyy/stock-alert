@@ -84,11 +84,10 @@ public class GetLatestPriceAssetAdapter implements GetLatestPriceAssetPort {
 
     return String.format(
         "from(bucket: \"stock-alert\") "
-            + "|> range(start: -1y) "
+            + "|> range(start: -1w) "
             + "|> filter(fn: (r) => r._measurement == \"price_asset\" and (%s)) "
             + "|> group(columns: [\"symbol\"]) "
-            + "|> sort(columns: [\"_time\"], desc: true) "
-            + "|> limit(n:1)",
+            + "|> last(column: \"_time\")",
         filterCondition);
   }
 }
