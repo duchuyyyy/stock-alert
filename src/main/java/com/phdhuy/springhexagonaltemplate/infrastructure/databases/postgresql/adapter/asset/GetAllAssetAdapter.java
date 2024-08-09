@@ -29,22 +29,16 @@ public class GetAllAssetAdapter implements GetAllAssetPort {
 
   @Override
   public Page<Asset> getAllAsset(Pageable pageable) {
-    log.info("start query db");
     Page<AssetSummary> assetSummaries = assetRepository.getAllAssetSummary(pageable);
-    log.info("end query db");
     List<String> symbols =
         assetSummaries.getContent().stream().map(AssetSummary::getIdentity).toList();
 
-    log.info("start query influxdb");
     HashMap<String, Double> latestPrices = getLatestPriceAssetPort.getLatestPriceAssets(symbols);
-    log.info("end query influxdb");
 
-    log.info("start convert to response");
     List<Asset> assets =
         assetSummaries.getContent().stream()
             .map(summary -> mapToAsset(summary, latestPrices))
             .toList();
-    log.info("end convert to response");
 
     return new PageImpl<>(assets, pageable, assetSummaries.getTotalElements());
   }
