@@ -8,6 +8,7 @@ import com.phdhuy.springhexagonaltemplate.infrastructure.databases.postgresql.re
 import com.phdhuy.springhexagonaltemplate.infrastructure.mapper.AssetMapper;
 import com.phdhuy.springhexagonaltemplate.shared.annotation.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
+@Slf4j
 public class GetAllAssetAdapter implements GetAllAssetPort {
 
   private final AssetRepository assetRepository;
@@ -28,7 +30,6 @@ public class GetAllAssetAdapter implements GetAllAssetPort {
   @Override
   public Page<Asset> getAllAsset(Pageable pageable) {
     Page<AssetSummary> assetSummaries = assetRepository.getAllAssetSummary(pageable);
-
     List<String> symbols =
         assetSummaries.getContent().stream().map(AssetSummary::getIdentity).toList();
 
